@@ -32,8 +32,15 @@ async function start() {
   const welcomeMessage = `182 Main St.
 You are standing on Main Street between Church and South Winooski.
 There is a door here. A keypad sits on the handle.
-On the door is a handwritten sign.`;
+On the door is a handwritten sign. Would you like to enter Room 1?`;
   let answer = await ask(welcomeMessage);
-  console.log('Now write your code to make this work!');
-  process.exit();
-}
+    if (answer.toLowerCase() === "yes") {
+      console.log("Entering Room 1...")
+    } else if (answer.toLowerCase() === "no") {
+      console.log("Ok! You don't have to play. See you next time.")
+      process.exit()
+    } else {
+      console.log("Your answer is invalid. Try again.")
+      start()
+    }
+  }
