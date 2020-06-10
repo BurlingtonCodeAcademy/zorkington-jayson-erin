@@ -32,15 +32,15 @@ async function start() {
   const welcomeMessage = `182 Main St.
 You are standing on Main Street between Church and South Winooski.
 There is a door here. A keypad sits on the handle.
-On the door is a handwritten sign. Would you like to enter Room 1?`;
+On the door is a handwritten sign. Would you like to read the sign? `;
   let answer = await ask(welcomeMessage);
     if (answer.toLowerCase() === "yes") {
-      console.log("Entering Room 1...")
+      console.log("Welcome to HELL! If you'd like to come inside, enter '1234': ")
     } else if (answer.toLowerCase() === "no") {
       console.log("Ok! You don't have to play. See you next time.")
       process.exit()
     } else {
-      console.log("Your answer is invalid. Try again.")
+      console.log(`Sorry I don't know how to ${answer}.`)
       start()
     }
   }
