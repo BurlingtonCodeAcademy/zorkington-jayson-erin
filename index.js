@@ -35,8 +35,8 @@ let player = {
   trapped: true,
   facing: 'north',
   escape() {
-      
-}
+
+  }
 }
 
 let keypad = {
@@ -53,14 +53,42 @@ let keypad = {
   }
 }
 
-let desk = {
-  name: "desk",
-  desc: "There's a desk in the entryway. One of the drawers is halfway open..."
+class Rooms {
+  constructor(name, description, locked) {
+    this.name = name
+    this.description = description
+    this.locked = locked
+  }
 }
 
-let carpet = {
+// five rooms
 
+
+
+
+
+class Items {
+  constructor(name, description, takeable) {
+    this.name = name
+    this.description = description
+    this.takeable = takeable
+  }
+  examine() {
+    console.log(this.description)
+  } 
 }
+
+// five desks
+let deskRoomOne = new Items("desk", "The desk is old with a broken leg. One of the drawers is halfway open...", true)
+
+
+// five carpets
+let carpetRoomOne = new Items("carpet", "There's a carpet in the middle of the room...", false)
+
+
+// five keys
+let keyRoomOne = 
+
 
 
 start();
@@ -71,13 +99,12 @@ You are standing on Main Street between Church and South Winooski.
 There is a door here. A keypad sits on the handle.
 On the door is a handwritten sign. Would you like to read the sign? `;
   let answer = await ask(welcomeMessage);
-  
+
   if (answer.toLowerCase() === "yes") {
-    let answer = await ask("Welcome to 182 Main St! If you'd like to come inside, enter '1234': ") {
-      if (answer === '1234')
-      console.log("The door unlocked and you have entered the building. Inside the room you notice a desk" )
-
-
+    let answer = await ask("Welcome to 182 Main St! If you'd like to come inside, enter '1234': ")
+    if (answer === '1234') {
+      console.log("The door unlocked and you have entered the building. Inside the room you notice a desk")
+    }
   } else if (answer.toLowerCase() === "no") {
     console.log("Ok! You don't have to play. See you next time.")
     process.exit()
