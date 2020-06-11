@@ -27,16 +27,41 @@ let states = {
   }
 }
 
-let currentState = "green";
 
-function enterState(newState) {
-  let validTransitions = states[currentState].canChangeTo;
-  if (validTransitions.includes(newState)) {
-    currentState = newState;
-  } else {
-    throw 'Invalid state transition attempted - from ' + currentState + ' to ' + newState;
+
+let player = {
+
+  inventory: [], //anything in "[]" can be .pop() and .push() to it from other "[]". A function will send them there from another object's inventory.
+  trapped: true,
+  facing: 'north',
+  escape() {
+      
+}
+}
+
+let keypad = {
+  name: "keypad",
+  desc: "On the door to the main entrace to the building there is a keypad that requires a passcode to unlock.",
+  enter(code) {
+    if (code === '1234') {
+      console.log("You unlocked the door and entered the building.")
+      return true;
+    } else {
+      console.log("Wrong code, try again.")
+      return false;
+    }
   }
 }
+
+let desk = {
+  name: "desk",
+  desc: "There's a desk in the entryway. One of the drawers is halfway open..."
+}
+
+let carpet = {
+
+}
+
 
 start();
 
@@ -46,8 +71,13 @@ You are standing on Main Street between Church and South Winooski.
 There is a door here. A keypad sits on the handle.
 On the door is a handwritten sign. Would you like to read the sign? `;
   let answer = await ask(welcomeMessage);
+  
   if (answer.toLowerCase() === "yes") {
-    console.log("Welcome to HELL! If you'd like to come inside, enter '1234': ")
+    let answer = await ask("Welcome to 182 Main St! If you'd like to come inside, enter '1234': ") {
+      if (answer === '1234')
+      console.log("The door unlocked and you have entered the building. Inside the room you notice a desk" )
+
+
   } else if (answer.toLowerCase() === "no") {
     console.log("Ok! You don't have to play. See you next time.")
     process.exit()
