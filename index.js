@@ -56,6 +56,3 @@ On the door is a handwritten sign. Would you like to read the sign? `;
     start()
   }
 }
-
-
-while (userAnswer !== exit)
