@@ -62,8 +62,11 @@ class Rooms {
 }
 
 // five rooms
-
-
+let roomOne = new Room("Room 1", "There's a desk with a broken leg in the middle of the room.", false)
+let roomTwo = new Room("Room 2", "There's a dusty carpet at your feet.", false)
+let roomThree = new Room("Room 3", "There's a grandfather clock on the wall.", false)
+let roomFour = new Room("Room 4", "There's a janky cabinet falling off of the wall.", true)
+let roomFive = new Room("Room 5", "There's an ax hanging from the ceiling.", true)
 
 
 
