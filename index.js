@@ -76,7 +76,7 @@ On the door is a handwritten sign. Would you like to read the sign? `;
     let answer = await ask("Welcome to 182 Main St! If you'd like to come inside, enter '1234': ") {
       if (answer === '1234')
       console.log("The door unlocked and you have entered the building. Inside the room you notice a desk" )
-    }
+
 
   } else if (answer.toLowerCase() === "no") {
     console.log("Ok! You don't have to play. See you next time.")
