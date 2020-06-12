@@ -89,6 +89,9 @@ class Items {
   }
 }
 
+function showInventory() {
+  console.log(player.inventory) // fix inventory to just show name
+}
 
 // sign - room 1
 let sign = new Items("sign", "There a code on the sign that reads, '1234'.", false)
@@ -100,7 +103,7 @@ let deskRoomOne = new Items("desk", "One of the drawers is halfway open...", tru
 let keyRoomOne = new Items("key", "There's a key in the drawer...", true)
 
 // carpet - room 2
-let carpetRoomOne = new Items("carpet", "You can see the corner of a piece of paper sticking out from underneath...", false)
+let carpetRoomTwo = new Items("carpet", "You can see the corner of a piece of paper sticking out from underneath...", false)
 
 // paper - under carpet in room 2
 let paper = new Items("paper", "On the piece of paper there is a 5 digit code and instructions to enter '12345' onto the door's keypad.", true)
@@ -110,7 +113,7 @@ let keypad = new Items("keypad", "The keypad has buttons labeled 1 - 9. Would yo
 // answering no can lead you to an unlocked door?
 
 // moltov cocktail - if you use it the building burns down and you die - process.exit()
-let moltov = new Items("moltov cocktail", "There's a moltov cocktail in the middle of the room. What would you like to do with it?", true)
+let molotov = new Items("moltov cocktail", "There's a moltov cocktail in the middle of the room. What would you like to do with it?", true)
 
 // rock (room 3) - throw it through the window to escape?
 let rock = new Items("rock", "There's a rock on a window ledge.", true)
@@ -129,9 +132,29 @@ let axe = new Items("ax", "It's rusty, but sharp...", true)
 
 //Lookup table for linking item(string) to item(object)
 let lookupTable = {
-	"take desk": deskRoomOne,
+  "take desk": deskRoomOne,
+  "examine desk": deskRoomOne,
+  "take key": keyRoomOne,
+  "examine key": keyRoomOne,
+  "take sign": sign,
+  "examine sign": sign,
+  "take carpet": carpetRoomTwo,
+  "examine carpet": carpetRoomTwo,
+  "take keypad": keypad,
+  "examine keypad": keypad,
+  "take molotov cocktail": molotov,
+  "examine molotov cocktail": molotov,
+  "take rock": rock,
+  "examine rock": rock,
+  "take clock": clock,
+  "examine clock": clock,
+  "take cabinet": cabinet,
+  "examine cabinet": cabinet,
+  "take snickers bar": snickers,
+  "examine snickers bar": snickers,
+  "take axe": axe,
+  "examine axe": axe
 };
-let input = "take desk"
 
 
 start()
@@ -155,6 +178,9 @@ async function gamePlay() {
       answer = await ask("> ")
       if (answer.toLowerCase().includes("take")) {
         lookupTable[answer].take()
+        console.log(showInventory())
+      } else if (answer.toLowerCase().includes("examine")) {
+        lookupTable[answer].examine()
       }
       return gamePlay()
     } else {
