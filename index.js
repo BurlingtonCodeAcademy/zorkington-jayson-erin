@@ -68,7 +68,7 @@ class Items {
 }
 
 // sign - room 1
-let sign = new Items("sign", "There a code on the sign that reads, '1234'.", false)
+let sign = new Items("sign", "Welcome to Burlington Code Academy! Come on up to the third floor. If the door is locked, use the code 12345.", false)
 
 // desk - room 1
 let deskRoomOne = new Items("desk", "The desk is old with a broken leg. One of the drawers is halfway open...", true)
