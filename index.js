@@ -39,6 +39,7 @@ let player = {
   }
 }
 
+<<<<<<< HEAD
 // let keypad = {
 //   name: "keypad",
 //   desc: "On the door to the main entrace to the building there is a keypad that requires a passcode to unlock.",
@@ -54,6 +55,9 @@ let player = {
 // }
 
 class Room {
+=======
+class Rooms {
+>>>>>>> 5ec0defbabc88b31cd17ff8713d233e593706ffe
   constructor(name, description, locked) {
     this.name = name
     this.description = description
@@ -80,6 +84,9 @@ class Items {
     console.log(this.description)
   } 
 }
+
+// sign - room 1
+let sign = new Items("sign", "There a code on the sign that reads, '1234'.", false)
 
 // desk - room 1
 let deskRoomOne = new Items("desk", "One of the drawers is halfway open...", true)
