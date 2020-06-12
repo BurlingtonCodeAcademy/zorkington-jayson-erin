@@ -39,20 +39,6 @@ let player = {
   }
 }
 
-let keypad = {
-  name: "keypad",
-  desc: "On the door to the main entrace to the building there is a keypad that requires a passcode to unlock.",
-  enter(code) {
-    if (code === '1234') {
-      console.log("You unlocked the door and entered the building.")
-      return true;
-    } else {
-      console.log("Wrong code, try again.")
-      return false;
-    }
-  }
-}
-
 class Rooms {
   constructor(name, description, locked) {
     this.name = name
@@ -80,6 +66,9 @@ class Items {
     console.log(this.description)
   } 
 }
+
+// sign - room 1
+let sign = new Items("sign", "There a code on the sign that reads, '1234'.", false)
 
 // desk - room 1
 let deskRoomOne = new Items("desk", "The desk is old with a broken leg. One of the drawers is halfway open...", true)
