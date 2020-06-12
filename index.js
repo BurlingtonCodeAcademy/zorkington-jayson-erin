@@ -39,21 +39,21 @@ let player = {
   }
 }
 
-let keypad = {
-  name: "keypad",
-  desc: "On the door to the main entrace to the building there is a keypad that requires a passcode to unlock.",
-  enter(code) {
-    if (code === '1234') {
-      console.log("You unlocked the door and entered the building.")
-      return true;
-    } else {
-      console.log("Wrong code, try again.")
-      return false;
-    }
-  }
-}
+// let keypad = {
+//   name: "keypad",
+//   desc: "On the door to the main entrace to the building there is a keypad that requires a passcode to unlock.",
+//   enter(code) {
+//     if (code === '1234') {
+//       console.log("You unlocked the door and entered the building.")
+//       return true;
+//     } else {
+//       console.log("Wrong code, try again.")
+//       return false;
+//     }
+//   }
+// }
 
-class Rooms {
+class Room {
   constructor(name, description, locked) {
     this.name = name
     this.description = description
@@ -82,13 +82,13 @@ class Items {
 }
 
 // desk - room 1
-let deskRoomOne = new Items("desk", "The desk is old with a broken leg. One of the drawers is halfway open...", true)
+let deskRoomOne = new Items("desk", "One of the drawers is halfway open...", true)
 
 // key - room 1
 let keyRoomOne = new Items("key", "There's a key in the drawer...", true)
 
 // carpet - room 2
-let carpetRoomOne = new Items("carpet", "There's a carpet in the middle of the room. You can see the corner of a piece of paper sticking out from underneigth...", false)
+let carpetRoomOne = new Items("carpet", "You can see the corner of a piece of paper sticking out from underneath...", false)
 
 // paper - under carpet in room 2
 let paper = new Items("paper", "On the piece of paper there is a 5 digit code and instructions to enter '12345' onto the door's keypad.", true)
@@ -97,23 +97,23 @@ let paper = new Items("paper", "On the piece of paper there is a 5 digit code an
 let keypad = new Items("keypad", "The keypad has buttons labeled 1 - 9. Would you like to try to unlock the keypad?", false)
 // answering no can lead you to an unlocked door?
 
-// moltov cocktail - if you use it the buliding burns down and you die - process.exit()
-let moltov = new Items("moltov cocktail", "There's a moltov cocktail on the middle of the room. What would you like to do with it?", true)
+// moltov cocktail - if you use it the building burns down and you die - process.exit()
+let moltov = new Items("moltov cocktail", "There's a moltov cocktail in the middle of the room. What would you like to do with it?", true)
 
 // rock (room 3) - throw it through the window to escape?
 let rock = new Items("rock", "There's a rock on a window ledge.", true)
 
 // clock (room 3) - Upon interaction the cuckoo bird pops out and scares you.
-let clock = new Items("clock", "There's a cuckoo clock on the wall...", false)
+let clock = new Items("clock", "The time is stuck at 12.", false)
 
 // old wooden cabinet (room 4)
-let cabinet = new Items("cabinet", "There's an old wooden cabinet against the far wall...", false)
+let cabinet = new Items("cabinet", "It's covered in dust...", false)
 
 // snickers bar (room 4)
 let snickers = new Items("snickers", "There is a delicious snickers bar. Perfect timing because all this walking has made you hungry!", true)
 
 // axe (room 5) - "You notice a large axe leaning against the wall. There are no other doors or windows in the room, but you give the wall a tap and notice that it's very thin..."
-let axe = newItems("axe", "You notice a large axe leaning against the wall.", true)
+let axe = new Items("ax", "It's rusty, but sharp...", true)
 
 
 
