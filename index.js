@@ -20,7 +20,7 @@ let states = {
     canChangeTo: ['roomFour', 'roomFive']
   },
   'roomFour': {
-    canChangeTo: ['roomFive', 'room2']
+    canChangeTo: ['roomFive', 'roomTwo']
   },
   'roomFive': {
     canChangeTo: []
@@ -80,14 +80,15 @@ class Items {
   } 
   take() {
     if (this.takeable === true) {
-      let item = this.name
+      let item = this
       player.inventory.push(item)
-      console.log(`You've added ${item} to your inventory!`)
+      console.log(`You've added ${item.name} to your inventory!`)
     } else {
       console.log("You can't take this!")
     }
   }
 }
+
 
 // sign - room 1
 let sign = new Items("sign", "There a code on the sign that reads, '1234'.", false)
@@ -126,35 +127,70 @@ let snickers = new Items("snickers", "There is a delicious snickers bar. Perfect
 // axe (room 5) - "You notice a large axe leaning against the wall. There are no other doors or windows in the room, but you give the wall a tap and notice that it's very thin..."
 let axe = new Items("ax", "It's rusty, but sharp...", true)
 
+//Lookup table for linking item(string) to item(object)
+let lookupTable = {
+	"take desk": deskRoomOne,
+};
+let input = "take desk"
 
-start();
 
+start()
 async function start() {
-  const welcomeMessage = `182 Main St.
-You are standing on Main Street between Church and South Winooski.
-There is a door here. A keypad sits on the handle.
-On the door is a handwritten sign. Would you like to read the sign? `;
-  let answer = await ask(welcomeMessage);
-
+  let answer = await ask(`182 Main St.
+  You are standing on Main Street between Church and South Winooski.
+  There is a door here. A keypad sits on the handle.
+  On the door is a handwritten sign. Would you like to read the sign? `)
   if (answer.toLowerCase() === "yes") {
-    let answer = await ask("The sign reads: Welcome to 182 Main St! If you'd like to come inside, enter '1234': ")
-  
-    while (answer !== '1234')
-    answer = await ask("Wrong code! Try again!: ")
-    if (answer === '1234') {
-      console.log(`The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description}`)
-      let answer = await ask("What would you like to do? ")
-    }   if (answer === "take" && deskRoomOne.takeable) {
-        console.log("You've added this item to your inventory!")
-    }
-  
-  } else if (answer.toLowerCase() === "no") {
-    console.log("Ok! You don't have to play. See you next time.")
-    process.exit()
-  } else if (answer.toLowerCase() === "take" && this.item.takeable) {
-    console.log("item added")
+    console.log("The sign reads: Welcome to 182 Main St! If you'd like to come inside, enter '1234': ")
+    gamePlay()
   } else {
-    console.log(`Sorry I don't know how to ${answer}.`)
     start()
   }
 }
+
+async function gamePlay() {
+  let answer =  await ask("> ")
+    if (answer === '1234') {
+      console.log(`The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description} What would you like to do?`)
+      answer = await ask("> ")
+      if (answer.toLowerCase().includes("take")) {
+        lookupTable[answer].take()
+      }
+      return gamePlay()
+    } else {
+      console.log("You've entered the wrong combo. Try again!")
+      return gamePlay()
+    }
+}
+
+
+// async function start() {
+//   const welcomeMessage = `182 Main St.
+// You are standing on Main Street between Church and South Winooski.
+// There is a door here. A keypad sits on the handle.
+// On the door is a handwritten sign. Would you like to read the sign? `;
+//   let answer = await ask(welcomeMessage);
+
+//   if (answer.toLowerCase() === "yes") {
+//     let answer = await ask("The sign reads: Welcome to 182 Main St! If you'd like to come inside, enter '1234': ")
+  
+//     while (answer !== '1234') {
+//       answer = await ask("Wrong code! Try again!: ")
+//     }
+//     if (answer === '1234') {
+//       console.log(`The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description}`)
+//       let answer = await ask("What would you like to do? ")
+//     }   if (answer === "take" && deskRoomOne.take() === true) {
+//         console.log("You've added this item to your inventory!")
+//     }
+  
+//   } else if (answer.toLowerCase() === "no") {
+//     console.log("Ok! You don't have to play. See you next time.")
+//     process.exit()
+//   } else if (answer.toLowerCase() === "take" && this.item.takeable) {
+//     console.log("item added")
+//   } else {
+//     console.log(`Sorry I don't know how to ${answer}.`)
+//     start()
+//   }
+// }
