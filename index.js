@@ -61,7 +61,7 @@ class Room {
 // five rooms
 let roomOne = new Room("Room 1", "There's a desk with a broken leg in the middle of the room.", false)
 let roomTwo = new Room("Room 2", "There's a dusty carpet at your feet and a door on the opposite side of the room with a keypad on it.", false)
-let roomThree = new Room("Room 3", "There's a grandfather clock on the wall.", false)
+let roomThree = new Room("Room 3", "There are no doors in the room, but you notice a window on the far wall with a rock sitting on the ledge.\nThrough the window you can see there's another room.", false)
 let roomFour = new Room("Room 4", "There's a janky cabinet falling off of the wall.", true)
 let roomFive = new Room("Room 5", "There's an ax hanging from the ceiling.", true)
 
@@ -150,6 +150,7 @@ let lookupTable = {
   "examine molotov cocktail": molotov,
   "take rock": rock,
   "examine rock": rock,
+  "throw rock": rock,
   "take clock": clock,
   "examine clock": clock,
   "take cabinet": cabinet,
@@ -162,6 +163,14 @@ let lookupTable = {
   "examine paper": paper
 };
 
+async function useKeyPad() {
+  let code = await ask("Enter code: ")
+  if (code === "12345") {
+    return true
+  } else {
+    return false
+  }
+}
 
 start()
 async function start() {
@@ -199,7 +208,21 @@ async function gamePlay() {
     } else {
       console.log("The door is locked!")
       return gamePlay()
-    }
+    } 
+  } else if (answer.toLowerCase() === "use keypad") {
+    let canOpen = await useKeyPad()
+    if (canOpen) {
+      console.log(`You're now in room 3!\n${roomThree.description}`)
+    } else {
+      console.log("Wrong combo. Try again.")
+    } 
+    return gamePlay()
+  } else if (answer.toLowerCase() === "throw rock") {
+    console.log(`You smashed the window and crawled through.\nYou have entered Room 4. ${roomFour.description}`)
+    return gamePlay()
+  } else if (answer.toLowerCase() !== "throw rock) {
+    console.log("Try to 'throw rock'...")
+    return gamePlay()
   } else {
   console.log("You've entered the wrong combo. Try again!")
   return gamePlay()
