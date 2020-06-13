@@ -31,8 +31,6 @@ let states = {
 let player = {
 
   inventory: [], //anything in "[]" can be .pop() and .push() to it from other "[]". A function will send them there from another object's inventory.
-  trapped: true,
-  facing: 'north',
   escape() {
 
   }
@@ -62,7 +60,7 @@ class Room {
 
 // five rooms
 let roomOne = new Room("Room 1", "There's a desk with a broken leg in the middle of the room.", false)
-let roomTwo = new Room("Room 2", "There's a dusty carpet at your feet.", false)
+let roomTwo = new Room("Room 2", "There's a dusty carpet at your feet and a door on the opposite side of the room with a keypad on it.", false)
 let roomThree = new Room("Room 3", "There's a grandfather clock on the wall.", false)
 let roomFour = new Room("Room 4", "There's a janky cabinet falling off of the wall.", true)
 let roomFive = new Room("Room 5", "There's an ax hanging from the ceiling.", true)
@@ -77,7 +75,7 @@ class Items {
   }
   examine() {
     console.log(this.description)
-  } 
+  }
   take() {
     if (this.takeable === true) {
       let item = this
@@ -90,14 +88,20 @@ class Items {
 }
 
 function showInventory() {
-  console.log(player.inventory) // fix inventory to just show name
+  let inventoryArray = player.inventory.map((item) => {
+    return item.name
+  })
+  console.log("You have the following items: ")
+  inventoryArray.forEach((item) => console.log(item))
+  return
 }
+
 
 // sign - room 1
 let sign = new Items("sign", "There a code on the sign that reads, '1234'.", false)
 
 // desk - room 1
-let deskRoomOne = new Items("desk", "One of the drawers is halfway open...", true)
+let deskRoomOne = new Items("desk", "One of the drawers is halfway open and you see a key...", true)
 
 // key - room 1
 let keyRoomOne = new Items("key", "There's a key in the drawer...", true)
@@ -106,7 +110,7 @@ let keyRoomOne = new Items("key", "There's a key in the drawer...", true)
 let carpetRoomTwo = new Items("carpet", "You can see the corner of a piece of paper sticking out from underneath...", false)
 
 // paper - under carpet in room 2
-let paper = new Items("paper", "On the piece of paper there is a 5 digit code and instructions to enter '12345' onto the door's keypad.", true)
+let paper = new Items("paper", "On the piece of paper there is a 5 digit code and instructions to enter '12345' onto the door's keypad...", true)
 
 // keypad - on exit door from room 2 to room 3
 let keypad = new Items("keypad", "The keypad has buttons labeled 1 - 9. Would you like to try to unlock the keypad?", false)
@@ -153,7 +157,9 @@ let lookupTable = {
   "take snickers bar": snickers,
   "examine snickers bar": snickers,
   "take axe": axe,
-  "examine axe": axe
+  "examine axe": axe,
+  "take paper": paper,
+  "examine paper": paper
 };
 
 
@@ -172,21 +178,32 @@ async function start() {
 }
 
 async function gamePlay() {
-  let answer =  await ask("> ")
-    if (answer === '1234') {
-      console.log(`The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description} What would you like to do?`)
-      answer = await ask("> ")
-      if (answer.toLowerCase().includes("take")) {
-        lookupTable[answer].take()
-        console.log(showInventory())
-      } else if (answer.toLowerCase().includes("examine")) {
-        lookupTable[answer].examine()
-      }
+  let answer = await ask("What would you like to do? ")
+  if (answer === '1234') {
+    console.log(`The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description} What would you like to do?`)
+    return gamePlay()
+  } else if (answer.toLowerCase().includes("take")) {
+    lookupTable[answer].take()
+    return gamePlay()
+  } else if (answer.toLowerCase().includes("examine")) {
+    lookupTable[answer].examine()
+    return gamePlay()
+  } else if (answer.toLowerCase() === "show inventory") {
+  showInventory()
+  return gamePlay()
+  } else if (answer.toLowerCase() === "open door") {
+    if (player.inventory.includes(keyRoomOne)) {
+      player.inventory.pop()
+      console.log(`You're now in Room 2!\n${roomTwo.description}`)
       return gamePlay()
     } else {
-      console.log("You've entered the wrong combo. Try again!")
+      console.log("The door is locked!")
       return gamePlay()
     }
+  } else {
+  console.log("You've entered the wrong combo. Try again!")
+  return gamePlay()
+  }
 }
 
 
@@ -199,7 +216,7 @@ async function gamePlay() {
 
 //   if (answer.toLowerCase() === "yes") {
 //     let answer = await ask("The sign reads: Welcome to 182 Main St! If you'd like to come inside, enter '1234': ")
-  
+
 //     while (answer !== '1234') {
 //       answer = await ask("Wrong code! Try again!: ")
 //     }
@@ -209,7 +226,7 @@ async function gamePlay() {
 //     }   if (answer === "take" && deskRoomOne.take() === true) {
 //         console.log("You've added this item to your inventory!")
 //     }
-  
+
 //   } else if (answer.toLowerCase() === "no") {
 //     console.log("Ok! You don't have to play. See you next time.")
 //     process.exit()
