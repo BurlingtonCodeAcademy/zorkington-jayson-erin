@@ -62,8 +62,8 @@ class Room {
 let roomOne = new Room("Room 1", "There's a desk with a broken leg in the middle of the room.", false)
 let roomTwo = new Room("Room 2", "There's a dusty carpet at your feet and a door on the opposite side of the room with a keypad on it.", false)
 let roomThree = new Room("Room 3", "There are no doors in the room, but you notice a window on the far wall with a rock sitting on the ledge.\nThrough the window you can see there's another room.", false)
-let roomFour = new Room("Room 4", "There's a janky cabinet falling off of the wall.", true)
-let roomFive = new Room("Room 5", "There's an ax hanging from the ceiling.", true)
+let roomFour = new Room("Room 4", "There's an Ogre drooling with hunger blocking your exit. He demands to be fed to open the door.\nYou notice a snickers bar on the floor....", true)
+let roomFive = new Room("Room 5", "You look around the room and notice a locked door, but the only objects in the room are a molotov cocktail and an axe.", true)
 
 
 
@@ -157,6 +157,7 @@ let lookupTable = {
   "examine cabinet": cabinet,
   "take snickers bar": snickers,
   "examine snickers bar": snickers,
+  "use snickers bar": snickers,
   "take axe": axe,
   "examine axe": axe,
   "take paper": paper,
@@ -220,14 +221,27 @@ async function gamePlay() {
   } else if (answer.toLowerCase() === "throw rock") {
     console.log(`You smashed the window and crawled through.\nYou have entered Room 4. ${roomFour.description}`)
     return gamePlay()
-  } else if (answer.toLowerCase() !== "throw rock) {
-    console.log("Try to 'throw rock'...")
+  } else if (answer.toLowerCase() === "use snickers bar") {
+    console.log(`You've fed the Ogre.\nNow that his hunger has been satisfied he opens the door for you and you enter room 5.\n${roomFive.description}`)
     return gamePlay()
-  } else {
+  } else if (answer.toLowerCase() === "use molotov cocktail") {
+    console.log("You burned down the building and died inside... Better luck next time.")
+    process.exit()
+  } else if (answer.toLowerCase() === "use axe") {
+    console.log("You broke down the door and escaped!! Congratulations you beat the easiest game ever!")
+    process.exit()
+  }
+   else {
   console.log("You've entered the wrong combo. Try again!")
   return gamePlay()
   }
 }
+
+
+/*else if (answer.toLowerCase() !== "throw rock") {
+  console.log("Try to 'throw rock'...")
+  return gamePlay()*/
+
 
 
 // async function start() {
