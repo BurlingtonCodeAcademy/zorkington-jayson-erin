@@ -101,8 +101,8 @@ function changeRoom(room) {
 //console.log(player.currentRoom);
 //changeRoom("roomOne");
 //console.log(player.currentRoom);
-
 //&& (room.locked !== true)
+
 class Items {
   constructor(name, description, takeable, dropable) {
     this.name = name;
@@ -207,7 +207,7 @@ let cabinet = new Items("cabinet", "It's covered in dust...", false, true);
 
 // snickers bar (room 4)
 let snickers = new Items(
-  "snickers",
+  "snickers bar",
   "There is a delicious snickers bar. Perfect timing because all this walking has made you hungry!",
   true,
   true
@@ -223,8 +223,6 @@ let molotov = new Items(
 
 // axe (room 5) - "You notice a large axe leaning against the wall. There are no other doors or windows in the room, but you give the wall a tap and notice that it's very thin..."
 let axe = new Items("axe", "It's rusty, but sharp...", true, true);
-
-
 
 
 //Lookup table for linking item(string) to item(object)
@@ -321,9 +319,9 @@ let lookupTable = {
   "grab snickers bar": snickers,
   "drop snickers bar": snickers,
   "examine snickers bar": snickers,
-  "look at snickers": snickers,
-  "inspect snickers": snickers,
-  "view snickers": snickers,
+  "look at snickers bar": snickers,
+  "inspect snickers bar": snickers,
+  "view snickers bar": snickers,
   "use snickers bar": snickers,
   "feed the ogre": snickers,
 
