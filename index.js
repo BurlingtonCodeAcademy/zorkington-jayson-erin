@@ -1,5 +1,8 @@
-const readline = require('readline');
-const readlineInterface = readline.createInterface(process.stdin, process.stdout);
+const readline = require("readline");
+const readlineInterface = readline.createInterface(
+  process.stdin,
+  process.stdout
+);
 
 function ask(questionText) {
   return new Promise((resolve, reject) => {
@@ -10,152 +13,230 @@ function ask(questionText) {
 // remember the StateMachine lecture
 // https://bootcamp.burlingtoncodeacademy.com/lessons/cs/state-machines
 let states = {
-
- 'outsideRoom': {
-   canChangeTo: ['roomOne']
- },
-  'roomOne': {
-    canChangeTo: ['roomTwo', 'roomFour']
+  outsideRoom: {
+    canChangeTo: ["roomOne"],
   },
-  'roomTwo': {
-    canChangeTo: ['roomThree', 'roomFive']
+  roomOne: {
+    canChangeTo: ["roomTwo", "roomFour"],
   },
-  'roomThree': {
-    canChangeTo: ['roomFour', 'roomFive']
+  roomTwo: {
+    canChangeTo: ["roomThree", "roomFive"],
   },
-  'roomFour': {
-    canChangeTo: ['roomFive', 'roomTwo']
+  roomThree: {
+    canChangeTo: ["roomFour", "roomFive"],
   },
-  'roomFive': {
-    canChangeTo: []
-  }
-}
-
-
+  roomFour: {
+    canChangeTo: ["roomFive", "roomTwo"],
+  },
+  roomFive: {
+    canChangeTo: [],
+  },
+};
 
 let player = {
-
   inventory: [], //anything in "[]" can be .pop() and .push() to it from other "[]". A function will send them there from another object's inventory.
   currentRoom: "outsideRoom",
-  
-}
+};
 
 class Room {
-  constructor(name, description, locked) {
-    this.name = name
-    this.description = description
-    this.locked = locked
+  constructor(name, description, locked, inventory) {
+    this.name = name;
+    this.description = description;
+    this.locked = locked;
+    this.inventory = inventory;
   }
 }
 
 // five rooms
-let outsideRoom = new Room("Outside", "You are outside looking at the spooky house.", false)
-let roomOne = new Room("Room 1", "You enter the room and look around.\nThere's a locked door on the opposite wall. There's also a desk with a broken leg in the middle of the room.", false)
-let roomTwo = new Room("Room 2", "There's a dusty carpet at your feet and a door on the opposite side of the room with a keypad on it.", false)
-let roomThree = new Room("Room 3", "There are no doors in the room, but you notice a window on the far wall with a rock sitting on the ledge.\nThrough the window you can see there's another room.", false)
-let roomFour = new Room("Room 4", "There's an Ogre drooling with hunger blocking your exit. He demands to be fed to open the door.\nYou notice a snickers bar on the floor....", true)
-let roomFive = new Room("Room 5", "You look around the room and notice a locked door, but the only objects in the room are a molotov cocktail and an axe.", true)
+let outsideRoom = new Room(
+  "Outside",
+  "You are outside looking at the spooky house.",
+  false,
+  ["sign"]
+);
+let roomOne = new Room(
+  "Room 1",
+  "You enter the room and look around.\nThere's a locked door on the opposite wall. There's also a desk with a broken leg in the middle of the room.",
+  false,
+  ["desk", "key"]
+);
+let roomTwo = new Room(
+  "Room 2",
+  "There's a dusty carpet at your feet and a door on the opposite side of the room with a keypad on it.",
+  false,
+  ["carpet", "paper", "keypad"]
+);
+let roomThree = new Room(
+  "Room 3",
+  "There are no doors in the room, but you notice a window on the far wall with a rock sitting on the ledge.\nThrough the window you can see there's another room.",
+  false,
+  ["rock"]
+);
+let roomFour = new Room(
+  "Room 4",
+  "There's an Ogre drooling with hunger blocking your exit. He demands to be fed to open the door.\nYou notice a snickers bar on the floor....",
+  true,
+  ["snickers bar"]
+);
+let roomFive = new Room(
+  "Room 5",
+  "You look around the room and notice a locked door, but the only objects in the room are a molotov cocktail and an axe.",
+  true,
+  ["axe", "molotov cocktail"]
+);
+
+/*let roomInventory = [];
+let arrayTwo = ["paper", "rock"];
+let index = arrayTwo.indexOf("paper");
+arrayOne.push(arrayTwo[index]);
+arrayTwo.splice(index, 1);
+//console.log(arrayOne);
+//console.log(arrayTwo);*/
 
 function changeRoom(room) {
   if (states[player.currentRoom].canChangeTo.includes(room)) {
-    player.currentRoom = room
+    player.currentRoom = room;
   }
 }
 //console.log(player.currentRoom);
 //changeRoom("roomOne");
 //console.log(player.currentRoom);
 
-
 //&& (room.locked !== true)
 class Items {
   constructor(name, description, takeable, dropable) {
-    this.name = name
-    this.description = description
-    this.takeable = takeable
-    this.dropable = dropable
+    this.name = name;
+    this.description = description;
+    this.takeable = takeable;
+    this.dropable = dropable;
     // above is new drop action
   }
   examine() {
-    console.log(this.description)
+    console.log(this.description);
   }
   take() {
     if (this.takeable === true) {
-      let item = this
-      player.inventory.push(item)
-      console.log(`You've added ${item.name} to your inventory!`)
+      let item = this;
+      player.inventory.push(item);
+      console.log(`You've added ${item.name} to your inventory!`);
     } else {
-      console.log("You can't take this!")
+      console.log("You can't take this!");
     }
   }
-  //new drop function
+  //drop function
   drop() {
     if (this.dropable === true) {
-      let item = this
-      player.inventory.pop(item)
-      console.log(`You've dropped ${item.name} from your inventory.`)
+      let item = this;
+      player.inventory.pop(item);
+      lookupTable[player.currentRoom].inventory.push(item);
+      console.log(lookupTable[player.currentRoom].inventory)
+      console.log(`You've dropped ${item.name} from your inventory.`);
     } else {
-      console.log("You can't drop this.")
+      console.log("You can't drop this.");
     }
   }
 }
+//if (lookupTable[player.currentRoom].inventory.includes(lookupTable[answer].name)) {
+//  lookupTable[answer].take();
 
 function showInventory() {
   let inventoryArray = player.inventory.map((item) => {
-    return item.name
-  })
-  console.log("You have the following items: ")
-  inventoryArray.forEach((item) => console.log(item))
-  return
+    return item.name;
+  });
+  console.log("You have the following items: ");
+  inventoryArray.forEach((item) => console.log(item));
+  return;
 }
 
 // door - any room you could "inspect" a door - without it it will break the game.
-let door = new Items("door", "The door is locked. Look around the room for a way to unlock it.", false, false)
+let door = new Items(
+  "door",
+  "The door is locked. Look around the room for a way to unlock it.",
+  false,
+  false
+);
 
 // sign - room 1
-let sign = new Items("sign", "Building condemned, use caution. If you'd like to come in, enter '1234'.", false, true)
+let sign = new Items(
+  "sign",
+  "Building condemned, use caution. If you'd like to come in, enter '1234'.",
+  false,
+  true
+);
 
 // desk - room 1
-let deskRoomOne = new Items("desk", "One of the drawers is halfway open and you see a key inside...", true, true)
+let deskRoomOne = new Items(
+  "desk",
+  "One of the drawers is halfway open and you see a key inside...",
+  true,
+  true
+);
 
 // key - room 1
-let keyRoomOne = new Items("key", "An old, rusty key.", true, true)
+let keyRoomOne = new Items("key", "An old, rusty key.", true, true);
 
 // carpet - room 2
-let carpetRoomTwo = new Items("carpet", "You can see the corner of a piece of paper sticking out from underneath...", false, true)
+let carpetRoomTwo = new Items(
+  "carpet",
+  "You can see the corner of a piece of paper sticking out from underneath...",
+  false,
+  true
+);
 
 // paper - under carpet in room 2
-let paper = new Items("paper", "On the piece of paper there is a 5 digit code and instructions to enter '12345' onto the door's keypad...", true, true)
+let paper = new Items(
+  "paper",
+  "On the piece of paper there is a 5 digit code and instructions to enter '12345' onto the door's keypad...",
+  true,
+  true
+);
 
 // keypad - on exit door from room 2 to room 3
-let keypad = new Items("keypad", "The keypad has buttons labeled 1 - 9. The keypad must be 'used' to unlock the door.", false, true)
+let keypad = new Items(
+  "keypad",
+  "The keypad has buttons labeled 1 - 9. The keypad must be 'used' to unlock the door.",
+  false,
+  true
+);
 
 // rock (room 3) - throw it through the window to escape?
-let rock = new Items("rock", "There's a rock on a window ledge.", true, true)
+let rock = new Items("rock", "There's a rock on a window ledge.", true, true);
 
 // clock (room 3) - Upon interaction the cuckoo bird pops out and scares you. - NOT IN STORY YET!
-let clock = new Items("clock", "The time is stuck at 12.", false, true)
+let clock = new Items("clock", "The time is stuck at 12.", false, true);
 
 // old wooden cabinet (room 4) - NOT IN STORY YET!
-let cabinet = new Items("cabinet", "It's covered in dust...", false, true)
+let cabinet = new Items("cabinet", "It's covered in dust...", false, true);
 
 // snickers bar (room 4)
-let snickers = new Items("snickers", "There is a delicious snickers bar. Perfect timing because all this walking has made you hungry!", true, true)
+let snickers = new Items(
+  "snickers",
+  "There is a delicious snickers bar. Perfect timing because all this walking has made you hungry!",
+  true,
+  true
+);
 
 // moltov cocktail - room 5 if you use it the building burns down and you die - process.exit()
-let molotov = new Items("moltov cocktail", "There's a moltov cocktail in the middle of the room. What would you like to do with it?", true, true)
+let molotov = new Items(
+  "moltov cocktail",
+  "There's a moltov cocktail in the middle of the room. What would you like to do with it?",
+  true,
+  true
+);
 
 // axe (room 5) - "You notice a large axe leaning against the wall. There are no other doors or windows in the room, but you give the wall a tap and notice that it's very thin..."
-let axe = new Items("ax", "It's rusty, but sharp...", true, true)
+let axe = new Items("axe", "It's rusty, but sharp...", true, true);
+
+
+
 
 //Lookup table for linking item(string) to item(object)
 let lookupTable = {
-
-
   "examine door": door,
   "look at door": door,
   "inspect door": door,
   "view door": door,
-  
+
   "take desk": deskRoomOne,
   "pick up desk": deskRoomOne,
   "grab desk": deskRoomOne,
@@ -265,99 +346,151 @@ let lookupTable = {
   "examine axe": axe,
   "look at axe": axe,
   "inspect axe": axe,
-  "view axe": axe
+  "view axe": axe,
 
-  //"grab xyzzyx": chainsawCheat,
-  //"use xyzzyx": chainsawCheat,
+  //room lookup table
+  "outsideRoom": outsideRoom,
+  "roomOne": roomOne,
+  "roomTwo": roomTwo,
+  "roomThree": roomThree,
+  "roomFour": roomFour,
+  "roomFive": roomFive,
+
 };
 
 async function useKeyPad() {
-  let code = await ask("Enter code: ")
+  let code = await ask("Enter code: ");
   if (code.includes("12345")) {
-    return true
+    return true;
   } else {
-    return false
+    return false;
   }
 }
 
-start()
+start();
 async function start() {
-  let answer = await ask(`You are standing at the front door of a creepy old house.\nA keypad sits on the handle.\nOn the door is a handwritten sign. Would you like to read the sign?\n`)
-  if ((answer.toLowerCase() === "yes") || (answer.toLowerCase() === "y")) {
-    console.log("The sign reads: Building condemned, use caution. If you'd like to come in, enter '1234': ")
-    gamePlay()
+  let answer = await ask(
+    `You are standing at the front door of a creepy old house.\nA keypad sits on the handle.\nOn the door is a handwritten sign. Would you like to read the sign?\n`
+  );
+  if (answer.toLowerCase() === "yes" || answer.toLowerCase() === "y") {
+    console.log(
+      "The sign reads: Building condemned, use caution. If you'd like to come in, enter '1234': "
+    );
+    gamePlay();
   } else {
-    console.log("Are you sure you don't want to read the sign?...")
-    start()
+    console.log("Are you sure you don't want to read the sign?...");
+    start();
   }
 }
 
 async function gamePlay() {
-  console.log(player)
-  let answer = await ask("What would you like to do?\n")
-  if (answer.includes('1234')) {
-    changeRoom("roomOne")
-    console.log(`The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description}`)
-    return gamePlay()
-  } else if ((answer.toLowerCase().includes("take")) || (answer.toLowerCase().includes("pick up")) || (answer.toLowerCase().includes("grab"))) {
-    lookupTable[answer].take()
-    return gamePlay()
-  } else if ((answer.toLowerCase().includes("examine")) || (answer.toLowerCase().includes("look at")) || (answer.toLowerCase().includes("inspect")) || (answer.toLowerCase().includes("view"))) {
-    lookupTable[answer].examine()
-    return gamePlay()
+  //console.log(player)
+  let answer = await ask("What would you like to do?\n");
+  if (answer.includes("1234")) {
+    changeRoom("roomOne");
+    console.log(
+      `The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description}`
+    );
+    return gamePlay();
+  } else if (
+    answer.toLowerCase().includes("take") ||
+    answer.toLowerCase().includes("pick up") ||
+    answer.toLowerCase().includes("grab")
+  ) {
+    if (lookupTable[player.currentRoom].inventory.includes(lookupTable[answer].name)) {
+      lookupTable[answer].take();
+      return gamePlay();
+    } else {
+      console.log("This item isn't in the room you are currently in.");
+      return gamePlay();
+    }
+  } else if (
+    answer.toLowerCase().includes("examine") ||
+    answer.toLowerCase().includes("look at") ||
+    answer.toLowerCase().includes("inspect") ||
+    answer.toLowerCase().includes("view")
+  ) {
+    lookupTable[answer].examine();
+    return gamePlay();
   } else if (answer.toLowerCase().includes("drop")) {
-    lookupTable[answer].drop()
-    return gamePlay()
-  } else if (answer === 'xyzzy') {  //cheat code
-    console.log("You entered the cheat code! Unfortunatley in this game that means you die!!!.....")
-    process.exit()
+    lookupTable[answer].drop();
+    return gamePlay();
+  } else if (answer === "xyzzy") {
+    //cheat code
+    console.log(
+      "You entered the cheat code! Unfortunatley in this game that means you die!!!....."
+    );
+    process.exit();
   } else if (answer.toLowerCase().includes("inventory")) {
-  showInventory()
-  return gamePlay()
-  } else if ((answer.toLowerCase() === "open door") || (answer.toLowerCase() === "use key") || (answer.toLowerCase() === "unlock door")) {
+    showInventory();
+    return gamePlay();
+  } else if (
+    answer.toLowerCase() === "open door" ||
+    answer.toLowerCase() === "use key" ||
+    answer.toLowerCase() === "unlock door"
+  ) {
     if (player.inventory.includes(keyRoomOne)) {
-      player.inventory.pop()
-      changeRoom("roomTwo")
-      console.log(`You're now in Room 2!\n${roomTwo.description}`)
-      return gamePlay()
+      player.inventory.pop();
+      changeRoom("roomTwo");
+      console.log(`You're now in Room 2!\n${roomTwo.description}`);
+      return gamePlay();
     } else {
-      console.log("The door is locked!")
-      return gamePlay()
-    } 
+      console.log("The door is locked!");
+      return gamePlay();
+    }
   } else if (answer.toLowerCase() === "use keypad") {
-    let canOpen = await useKeyPad()
+    let canOpen = await useKeyPad();
     if (canOpen) {
-      changeRoom("roomThree")
-      console.log(`You're now in room 3!\n${roomThree.description}`)
+      changeRoom("roomThree");
+      console.log(`You're now in room 3!\n${roomThree.description}`);
     } else {
-      console.log("Wrong combo. Try again.")
-    } 
-    return gamePlay()
-  } else if ((answer.toLowerCase() === "throw rock") || (answer.toLowerCase() === "use rock")) {
-    if (player.inventory.includes(rock) && (player.currentRoom === "roomThree")) {
-    player.inventory.pop()
-    changeRoom("roomFour")
-    console.log(`You smashed the window and crawled through.\nYou have entered Room 4!\n${roomFour.description}`)
-    return gamePlay()
+      console.log("Wrong combo. Try again.");
     }
-  } else if ((answer.toLowerCase() === "use snickers bar") || (answer.toLowerCase() === "feed ogre")) {
-    if (player.inventory.includes(snickers) && (player.currentRoom === "roomFour")) {
-    player.inventory.pop()
-    changeRoom("roomFive")
-    console.log(`You've fed the Ogre.\nNow that his hunger has been satisfied he opens the door for you and you enter room 5!\n${roomFive.description}`)
-    return gamePlay()
-  } else {
-    console.log("You have nothing to feed the ogre! Find something quick before he eats you!")
-    return gamePlay()
-    } 
+    return gamePlay();
+  } else if (
+    answer.toLowerCase() === "throw rock" ||
+    answer.toLowerCase() === "use rock"
+  ) {
+    if (player.inventory.includes(rock) && player.currentRoom === "roomThree") {
+      player.inventory.pop();
+      changeRoom("roomFour");
+      console.log(
+        `You smashed the window and crawled through.\nYou have entered Room 4!\n${roomFour.description}`
+      );
+      return gamePlay();
+    }
+  } else if (
+    answer.toLowerCase() === "use snickers bar" ||
+    answer.toLowerCase() === "feed ogre"
+  ) {
+    if (
+      player.inventory.includes(snickers) &&
+      player.currentRoom === "roomFour"
+    ) {
+      player.inventory.pop();
+      changeRoom("roomFive");
+      console.log(
+        `You've fed the Ogre.\nNow that his hunger has been satisfied he opens the door for you and you enter room 5!\n${roomFive.description}`
+      );
+      return gamePlay();
+    } else {
+      console.log(
+        "You have nothing to feed the ogre! Find something quick before he eats you!"
+      );
+      return gamePlay();
+    }
   } else if (answer.toLowerCase() === "use molotov cocktail") {
-    console.log("You burned down the building and died inside... Better luck next time.")
-    process.exit()
+    console.log(
+      "You burned down the building and died inside... Better luck next time."
+    );
+    process.exit();
   } else if (answer.toLowerCase() === "use axe") {
-    console.log("You broke down the door and escaped!! Congratulations you beat the easiest game ever!")
-    process.exit()
+    console.log(
+      "You broke down the door and escaped!! Congratulations you beat the easiest game ever!"
+    );
+    process.exit();
   } else {
-    console.log("Invalid input. Try again!")
-    return gamePlay()
-    }
+    console.log("Invalid input. Try again!");
+    return gamePlay();
+  }
 }
