@@ -56,7 +56,7 @@ let outsideRoom = new Room(
 );
 let roomOne = new Room(
   "Room 1",
-  "You enter the room and look around.\nThere's a locked door on the opposite wall. There's also a desk with a broken leg in the middle of the room.",
+  "You look around.\nThere's a locked door on the opposite wall. There's also a desk with a broken leg in the middle of the room.",
   false,
   ["desk", "key"]
 );
@@ -413,7 +413,7 @@ async function gamePlay() {
   } else if (answer === "xyzzy") {
     //cheat code
     console.log(
-      "You entered the cheat code! Unfortunatley in this game that means you die!!!....."
+      "You entered the cheat code! Unfortunately in this game that means you die!!!....."
     );
     process.exit();
   } else if (answer.toLowerCase().includes("inventory")) {
