@@ -128,16 +128,13 @@ class Items {
     if (this.dropable === true) {
       let item = this;
       player.inventory.pop(item);
-      lookupTable[player.currentRoom].inventory.push(item);
-      console.log(lookupTable[player.currentRoom].inventory)
+      lookupTable[player.currentRoom].inventory.push(item.name);
       console.log(`You've dropped ${item.name} from your inventory.`);
     } else {
       console.log("You can't drop this.");
     }
   }
 }
-//if (lookupTable[player.currentRoom].inventory.includes(lookupTable[answer].name)) {
-//  lookupTable[answer].take();
 
 function showInventory() {
   let inventoryArray = player.inventory.map((item) => {
