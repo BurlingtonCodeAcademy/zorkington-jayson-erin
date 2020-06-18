@@ -10,23 +10,21 @@ function ask(questionText) {
   });
 }
 
-// remember the StateMachine lecture
-// https://bootcamp.burlingtoncodeacademy.com/lessons/cs/state-machines
 let states = {
   outsideRoom: {
     canChangeTo: ["roomOne"],
   },
   roomOne: {
-    canChangeTo: ["roomTwo", "roomFour"],
+    canChangeTo: ["roomTwo"],
   },
   roomTwo: {
-    canChangeTo: ["roomThree", "roomFive"],
+    canChangeTo: ["roomThree"],
   },
   roomThree: {
-    canChangeTo: ["roomFour", "roomFive"],
+    canChangeTo: ["roomFour"],
   },
   roomFour: {
-    canChangeTo: ["roomFive", "roomTwo"],
+    canChangeTo: ["roomFive"],
   },
   roomFive: {
     canChangeTo: [],
@@ -34,7 +32,7 @@ let states = {
 };
 
 let player = {
-  inventory: [], //anything in "[]" can be .pop() and .push() to it from other "[]". A function will send them there from another object's inventory.
+  inventory: [],
   currentRoom: "outsideRoom",
 };
 
@@ -47,7 +45,7 @@ class Room {
   }
 }
 
-// five rooms
+// five rooms + outside
 let outsideRoom = new Room(
   "Outside",
   "You are outside looking at the spooky house.",
@@ -85,23 +83,12 @@ let roomFive = new Room(
   ["axe", "molotov cocktail"]
 );
 
-/*let roomInventory = [];
-let arrayTwo = ["paper", "rock"];
-let index = arrayTwo.indexOf("paper");
-arrayOne.push(arrayTwo[index]);
-arrayTwo.splice(index, 1);
-//console.log(arrayOne);
-//console.log(arrayTwo);*/
-
+//allows tracking of room the player's in
 function changeRoom(room) {
   if (states[player.currentRoom].canChangeTo.includes(room)) {
     player.currentRoom = room;
   }
 }
-//console.log(player.currentRoom);
-//changeRoom("roomOne");
-//console.log(player.currentRoom);
-//&& (room.locked !== true)
 
 class Items {
   constructor(name, description, takeable, dropable) {
@@ -109,8 +96,8 @@ class Items {
     this.description = description;
     this.takeable = takeable;
     this.dropable = dropable;
-    // above is new drop action
   }
+
   examine() {
     console.log(this.description);
   }
@@ -123,7 +110,6 @@ class Items {
       console.log("You can't take this!");
     }
   }
-  //drop function
   drop() {
     if (this.dropable === true) {
       let item = this;
@@ -136,6 +122,7 @@ class Items {
   }
 }
 
+//show inventory function
 function showInventory() {
   let inventoryArray = player.inventory.map((item) => {
     return item.name;
@@ -145,7 +132,7 @@ function showInventory() {
   return;
 }
 
-// door - any room you could "inspect" a door - without it it will break the game.
+// door - any room you could "inspect" a door - without it game will break.
 let door = new Items(
   "door",
   "The door is locked. Look around the room for a way to unlock it.",
@@ -170,7 +157,12 @@ let deskRoomOne = new Items(
 );
 
 // key - room 1
-let keyRoomOne = new Items("key", "An old, rusty key.", true, true);
+let keyRoomOne = new Items(
+  "key", 
+  "An old, rusty key.", 
+  true, 
+  true
+  );
 
 // carpet - room 2
 let carpetRoomTwo = new Items(
@@ -196,19 +188,34 @@ let keypad = new Items(
   true
 );
 
-// rock (room 3) - throw it through the window to escape?
-let rock = new Items("rock", "There's a rock on a window ledge.", true, true);
+// rock (room 3) - throw it through the window to escape
+let rock = new Items(
+  "rock", 
+  "There's a rock on a window ledge.", 
+  true, 
+  true
+);
 
 // clock (room 3) - Upon interaction the cuckoo bird pops out and scares you. - NOT IN STORY YET!
-let clock = new Items("clock", "The time is stuck at 12.", false, true);
+let clock = new Items(
+  "clock", 
+  "The time is stuck at 12.", 
+  false, 
+  true
+);
 
 // old wooden cabinet (room 4) - NOT IN STORY YET!
-let cabinet = new Items("cabinet", "It's covered in dust...", false, true);
+let cabinet = new Items(
+  "cabinet", 
+  "It's covered in dust...", 
+  false, 
+  true
+);
 
 // snickers bar (room 4)
 let snickers = new Items(
   "snickers bar",
-  "There is a delicious snickers bar. Perfect timing because all this walking has made you hungry!",
+  "There is a delicious snickers bar. I hear ogres love snickers bars...",
   true,
   true
 );
@@ -222,11 +229,17 @@ let molotov = new Items(
 );
 
 // axe (room 5) - "You notice a large axe leaning against the wall. There are no other doors or windows in the room, but you give the wall a tap and notice that it's very thin..."
-let axe = new Items("axe", "It's rusty, but sharp...", true, true);
-
+let axe = new Items(
+  "axe", 
+  "It's rusty, but sharp...", 
+  true, 
+  true
+);
 
 //Lookup table for linking item(string) to item(object)
 let lookupTable = {
+  
+  //item section of lookup table
   "examine door": door,
   "look at door": door,
   "inspect door": door,
@@ -343,14 +356,13 @@ let lookupTable = {
   "inspect axe": axe,
   "view axe": axe,
 
-  //room lookup table
+  //room section of lookup table
   "outsideRoom": outsideRoom,
   "roomOne": roomOne,
   "roomTwo": roomTwo,
   "roomThree": roomThree,
   "roomFour": roomFour,
   "roomFive": roomFive,
-
 };
 
 async function useKeyPad() {
@@ -362,6 +374,7 @@ async function useKeyPad() {
   }
 }
 
+//starts game
 start();
 async function start() {
   let answer = await ask(
@@ -378,8 +391,8 @@ async function start() {
   }
 }
 
+//recurring prompt
 async function gamePlay() {
-  //console.log(player)
   let answer = await ask("What would you like to do?\n");
   if (answer.includes("1234")) {
     changeRoom("roomOne");
@@ -392,7 +405,11 @@ async function gamePlay() {
     answer.toLowerCase().includes("pick up") ||
     answer.toLowerCase().includes("grab")
   ) {
-    if (lookupTable[player.currentRoom].inventory.includes(lookupTable[answer].name)) {
+    if (
+      lookupTable[player.currentRoom].inventory.includes(
+        lookupTable[answer].name
+      )
+    ) {
       lookupTable[answer].take();
       return gamePlay();
     } else {
@@ -481,7 +498,7 @@ async function gamePlay() {
     process.exit();
   } else if (answer.toLowerCase() === "use axe") {
     console.log(
-      "You broke down the door and escaped!! Congratulations you beat the easiest game ever!"
+      "You broke down the door and escaped!! Congratulations you escaped!"
     );
     process.exit();
   } else {
