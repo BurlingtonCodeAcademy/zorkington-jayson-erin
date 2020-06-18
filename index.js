@@ -215,8 +215,8 @@ let snickers = new Items(
 
 // moltov cocktail - room 5 if you use it the building burns down and you die - process.exit()
 let molotov = new Items(
-  "moltov cocktail",
-  "There's a moltov cocktail in the middle of the room. What would you like to do with it?",
+  "molotov cocktail",
+  "There's a molotov cocktail in the middle of the room. What would you like to do with it?",
   true,
   true
 );
