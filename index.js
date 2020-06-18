@@ -391,25 +391,30 @@ async function start() {
   }
 }
 
-//recurring prompt
+// You enter gamePlay function after entering the first room, and then it serves as a continued prompt for user 
+// input throughout the game.
 async function gamePlay() {
   let answer = await ask("What would you like to do?\n");
   if (answer.includes("1234")) {
+    // changeRoom keeps track of what room the player is in throughout the game
     changeRoom("roomOne");
     console.log(
       `The door unlocked and you have entered the building. You're in Room 1. ${roomOne.description}`
     );
     return gamePlay();
   } else if (
+    // below are three options for picking up an item
     answer.toLowerCase().includes("take") ||
     answer.toLowerCase().includes("pick up") ||
     answer.toLowerCase().includes("grab")
   ) {
     if (
+      // lookUpTable determines if an item is available to the player in the current room
       lookupTable[player.currentRoom].inventory.includes(
         lookupTable[answer].name
       )
     ) {
+      // if the item is available, the take method adds it to their inventory
       lookupTable[answer].take();
       return gamePlay();
     } else {
@@ -417,6 +422,7 @@ async function gamePlay() {
       return gamePlay();
     }
   } else if (
+    // below are four commands that allow the player to look at items
     answer.toLowerCase().includes("examine") ||
     answer.toLowerCase().includes("look at") ||
     answer.toLowerCase().includes("inspect") ||
@@ -424,23 +430,26 @@ async function gamePlay() {
   ) {
     lookupTable[answer].examine();
     return gamePlay();
+    // this drops the player's inventory into the current room
   } else if (answer.toLowerCase().includes("drop")) {
     lookupTable[answer].drop();
     return gamePlay();
+    // cheat code to automatically win (or die) in the game!
   } else if (answer === "xyzzy") {
-    //cheat code
     console.log(
       "You entered the cheat code! Unfortunately in this game that means you die!!!....."
     );
     process.exit();
   } else if (answer.toLowerCase().includes("inventory")) {
+    // showInventory shows the player items in their current inventory
     showInventory();
     return gamePlay();
   } else if (
+    // three commands that allow the player to leave room 1
     answer.toLowerCase() === "open door" ||
     answer.toLowerCase() === "use key" ||
     answer.toLowerCase() === "unlock door"
-  ) {
+  ) {// if player uses the key, it's removed from their inventory
     if (player.inventory.includes(keyRoomOne)) {
       player.inventory.pop();
       changeRoom("roomTwo");
@@ -449,9 +458,10 @@ async function gamePlay() {
     } else {
       console.log("The door is locked!");
       return gamePlay();
-    }
+    } // useKeyPad prompts you to enter a code to move to room 3
   } else if (answer.toLowerCase() === "use keypad") {
     let canOpen = await useKeyPad();
+    // canOpen lets the player know if they've entered the correct code
     if (canOpen) {
       changeRoom("roomThree");
       console.log(`You're now in room 3!\n${roomThree.description}`);
@@ -459,6 +469,7 @@ async function gamePlay() {
       console.log("Wrong combo. Try again.");
     }
     return gamePlay();
+    // two commands for moving into room 4
   } else if (
     answer.toLowerCase() === "throw rock" ||
     answer.toLowerCase() === "use rock"
@@ -471,6 +482,7 @@ async function gamePlay() {
       );
       return gamePlay();
     }
+    // two commands for feeding the ogre and getting into room 5
   } else if (
     answer.toLowerCase() === "use snickers bar" ||
     answer.toLowerCase() === "feed ogre"
@@ -490,7 +502,7 @@ async function gamePlay() {
         "You have nothing to feed the ogre! Find something quick before he eats you!"
       );
       return gamePlay();
-    }
+    } // two ways to end the game- molotov cocktail kills you and axe lets you break down the door and escape
   } else if (answer.toLowerCase() === "use molotov cocktail") {
     console.log(
       "You burned down the building and died inside... Better luck next time."
